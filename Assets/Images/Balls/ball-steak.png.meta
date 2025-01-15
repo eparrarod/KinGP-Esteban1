@@ -185,7 +185,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ball-steak_0: -6988862149216312699
+      ball-steak_1: 2612753881109755140
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

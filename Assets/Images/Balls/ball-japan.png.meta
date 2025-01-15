@@ -210,7 +210,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      ball-japan_0: -8487396936026994761
+      ball-japan_1: 3377170271666928632
+      ball-japan_2: 5819200411363653025
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
