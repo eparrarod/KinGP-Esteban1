@@ -16,6 +16,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball-steak
       objectReference: {fileID: 0}
+    - target: {fileID: 6307350669998399303, guid: aafe08c1de1a54e4a861c6113b42032e, type: 3}
+      propertyPath: m_Radius
+      value: 4.1177645
+      objectReference: {fileID: 0}
+    - target: {fileID: 6307350669998399303, guid: aafe08c1de1a54e4a861c6113b42032e, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.03066212
+      objectReference: {fileID: 0}
+    - target: {fileID: 6307350669998399303, guid: aafe08c1de1a54e4a861c6113b42032e, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.0081804395
+      objectReference: {fileID: 0}
     - target: {fileID: 6737880037659334090, guid: aafe08c1de1a54e4a861c6113b42032e, type: 3}
       propertyPath: m_Sprite
       value: 

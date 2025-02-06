@@ -18,17 +18,22 @@ public class BallBehaviour : MonoBehaviour{
     public float minLaunchSpeed;
     public float maxLaunchSpeed;
     public float cooldown;
+    Rigidbody2D body;
+
+    public bool rerouting;
 
     public int secondsToMaxSpeed;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start(){
+        rerouting = false;
+        body = GetComponent<Rigidbody2D>();
         targetPosition = getRandomPosition();
     }
 
     // Update is called once per frame
-    void Update(){
-        Debug.Log("T");
+    void FixedUpdate(){
+        //Debug.Log("T");
         if(onCooldown() == false) {
             if (launching == true) {
                 float currentLaunchTime = Time.time - timeLaunchStart;
@@ -36,11 +41,11 @@ public class BallBehaviour : MonoBehaviour{
                     startCooldown();
                 }
             } else {
-                Debug.Log("unim");
                 launch();
             }
         }
-        Vector2 currentPos = gameObject.GetComponent<Transform>().position;
+        
+        Vector2 currentPos = body.position;
         float distance = Vector2.Distance(currentPos, targetPosition);
         if(distance > 0.1) {
             float difficulty = getDifficultyPercentage();
@@ -56,7 +61,7 @@ public class BallBehaviour : MonoBehaviour{
             }
             currentSpeed = currentSpeed * Time.deltaTime;
             Vector2 newPosition = Vector2.MoveTowards(currentPos, targetPosition, currentSpeed);
-            transform.position = newPosition;
+            body.MovePosition(newPosition);
         } else { // You are at target
             if(launching == true) {
                 startCooldown();
@@ -78,7 +83,8 @@ public class BallBehaviour : MonoBehaviour{
     }
 
     public void launch() {
-        targetPosition = target.transform.position;
+        Rigidbody2D targetBody = target.GetComponent<Rigidbody2D>();
+        targetPosition = targetBody.position;
         if (launching == false) {
             timeLaunchStart = Time.time;
             launching = true;
@@ -88,19 +94,45 @@ public class BallBehaviour : MonoBehaviour{
     public bool onCooldown() {
         bool result = false;
         float timeSinceLastLaunch = Time.time - timeLastLaunch;
-        Debug.Log("tLL: " + timeLastLaunch);
-        Debug.Log("tsLL: " + timeSinceLastLaunch);
-        Debug.Log("cd: " + cooldown);
-        Debug.Log("diff: " + (timeSinceLastLaunch < cooldown));
         
         if (timeSinceLastLaunch < cooldown) {
             result = true;
-        } else {
-            Debug.Log("resul: " + result);
         }
-        
 
         return result;
+    }
+
+    public void reRoute(Collision2D collision) {
+        GameObject otherBall = collision.gameObject;
+        if (rerouting == true) {
+            otherBall.GetComponent<BallBehaviour>().rerouting = false;
+            Rigidbody2D otherBallBody = otherBall.GetComponent<Rigidbody2D>();
+            Vector2 contact = collision.GetContact(0).normal;
+            targetPosition = Vector2.Reflect(targetPosition, contact).normalized;
+            launching = false;
+            float separationDistance = 0.1f;
+            body.position += contact * separationDistance;
+        } else { 
+            rerouting = true;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.tag == "ball") {
+            reRoute(collision);   
+        }
+
+        if (collision.gameObject.tag == "wall") {
+            Debug.Log(this + " collided with " + collision.gameObject.tag);
+            targetPosition = getRandomPosition();
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision) {
+        if (collision.gameObject.tag == "wall") {
+            Debug.Log(this + " still collided with " + collision.gameObject.tag);
+            targetPosition = getRandomPosition();
+        }
     }
 
     public void startCooldown() {
